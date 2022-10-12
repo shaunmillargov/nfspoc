@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "poc.ords.basepath",
+  "type": "java.lang.String",
+  "description": "A description for 'poc.ords.basepath'"
+}]}
