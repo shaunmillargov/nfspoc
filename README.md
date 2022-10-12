@@ -1,7 +1,8 @@
 # nfspoc
 A POC for NFS large file retrieval 
   
-entry point:
+# Entry point
 http://localhost:8090/demo/start
 
-endpoints defined at application.properties
+# Enviro Variables
+PUT_DOC_ORDS_ENDPOINT - PUT Doc ORDS endpoint 
