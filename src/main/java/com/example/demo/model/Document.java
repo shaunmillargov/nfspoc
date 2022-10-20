@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "id" })
+@JsonPropertyOrder({ "name", "b64Guid" })
 public class Document {
 
 	@JsonProperty("name")
 	private String name;
 	
-	@JsonProperty("id")
-	private String id;
+	@JsonProperty("b64Guid")
+	private String b64Guid;
 
 	@JsonProperty("name")
 	public String getName() {
@@ -24,14 +24,14 @@ public class Document {
 		this.name = name;
 	}
 
-	@JsonProperty("id")
-	public String getId() {
-		return id;
+	@JsonProperty("b64Guid")
+	public String getB64Guid() {
+		return b64Guid;
 	}
 
-	@JsonProperty("id")
-	public void setId(String id) {
-		this.id = id;
+	@JsonProperty("b64Guid")
+	public void setB64Guid(String b64Guid) {
+		this.b64Guid = b64Guid;
 	}
 
 }

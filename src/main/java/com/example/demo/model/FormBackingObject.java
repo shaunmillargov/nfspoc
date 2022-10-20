@@ -7,17 +7,17 @@ import java.util.List;
 //Contains chosen docs list and individual thread data. 
 public class FormBackingObject {
 	
-	private String documentIds; // chosen documentId list. 
+	private String documentGuids; // chosen documentGuid list. 
 	private List<Job> jobs = new ArrayList<Job>(); // maintains thread id, label, documentId for each job.
 	private boolean testing; // indicates test cycle has begun. 
 	private String errors = null; 
 
-	public String getDocumentIds() {
-		return documentIds;
+	public String getDocumentGuids() {
+		return documentGuids;
 	}
 
-	public void setDocumentIds(String documentIds) {
-		this.documentIds = documentIds;
+	public void setDocumentGuids(String documentGuids) {
+		this.documentGuids = documentGuids;
 	}
 
 	public boolean isTesting() {
