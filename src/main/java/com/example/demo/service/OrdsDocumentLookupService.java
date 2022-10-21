@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.controller.SSEController;
+import com.example.demo.model.InitializeResponse;
 import com.example.demo.model.Job;
 import com.example.demo.model.OrdsResponse;
 
@@ -36,12 +37,28 @@ public class OrdsDocumentLookupService {
 		this.restTemplate = restTemplateBuilder.build();
 	}
 	
-	private CompletableFuture<ResponseEntity<OrdsResponse>> setNFSDocument(String documentId) throws InterruptedException {
-		logger.debug("Heard call to setNFSDocument with documentId, " + documentId);
-		ResponseEntity<OrdsResponse> results = restTemplate.exchange(ordsEndpoint, HttpMethod.GET, null, OrdsResponse.class, documentId);
+	private CompletableFuture<ResponseEntity<OrdsResponse>> setNFSDocument(String documentGuid) throws InterruptedException {
+		logger.info("Heard call to getFilePOC for document guid, " + documentGuid);
+		
+		logger.info("Calling initialize for documentGuid: " + documentGuid);
+		String appTicket = initialize();  
+		
+		logger.info("Calling getDocPOC for documentGuid: " + documentGuid);
+		String fileName = getFilePOC(documentGuid, appTicket); // here 
+		ResponseEntity<OrdsResponse> results = restTemplate.exchange(ordsEndpoint, HttpMethod.GET, null, OrdsResponse.class, documentGuid);
 		return CompletableFuture.completedFuture(results);
 	}
 	
+	private String getFilePOC(String documentGuid, String appTicket) {
+		//TODO - here
+		return null;
+	}
+
+	private String initialize() {
+		ResponseEntity<InitializeResponse> results = restTemplate.getForEntity(ordsEndpoint + "/initialize", InitializeResponse.class);
+		return results.getBody().getAppTicket();
+	}
+
 	@Async
 	public void SendOrdsGetDocumentRequests(List<Job> jobs) throws URISyntaxException {
 		
