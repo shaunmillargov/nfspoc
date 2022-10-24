@@ -128,11 +128,11 @@ public class PageController {
 		List<Job> jobs = new ArrayList<Job>();
 
 		List<String> documentsList = Arrays.asList(fbo.getDocumentGuids().split(",", -1));
-		for (String d : documentsList) {
+		for (String guid : documentsList) {
 			Job aJob = new Job();
-			aJob.setId(d);
+			aJob.setDocGuid(guid);
 			aJob.setThreadId(getThreadId());
-			aJob.setLabel(getThreadLabel(d));
+			aJob.setLabel(getThreadLabel(guid));
 			jobs.add(aJob);
 		}
 

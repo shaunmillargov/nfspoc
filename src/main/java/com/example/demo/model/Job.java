@@ -8,7 +8,7 @@ package com.example.demo.model;
  */
 public class Job {
 	
-	private String id; 
+	private String docGuid; 
 	private String label;
 	private String threadId;
 	private boolean error; 
@@ -18,11 +18,11 @@ public class Job {
 	private long duration; // current duration ms. 
 	private String percentageComplete = "0";
 	
-	public String getId() {
-		return id;
+	public String getDocGuid() {
+		return docGuid;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setDocGuid(String docGuid) {
+		this.docGuid = docGuid;
 	}
 	public String getLabel() {
 		return label;
