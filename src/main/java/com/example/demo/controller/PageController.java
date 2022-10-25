@@ -96,7 +96,7 @@ public class PageController {
 	@RequestMapping(value = "/commenceDemo", params = "submit", method = RequestMethod.POST)
 	public String submitForm(@ModelAttribute("fbo") FormBackingObject fbo, HttpServletRequest request) throws IOException, URISyntaxException {
 
-		logger.info("Starting test. Test doc guid(s): " + fbo.getDocumentGuids());
+		logger.info("Starting POC test for doc guid(s): " + fbo.getDocumentGuids());
 
 		if (null == fbo.getDocumentGuids()) {
 			fbo.setErrors("One or more document Ids must be selected");

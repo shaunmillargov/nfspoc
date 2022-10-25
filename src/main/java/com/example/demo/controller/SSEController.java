@@ -65,7 +65,7 @@ public class SSEController {
 				transmission.setError(job.isError());
 				transmission.setFileName(job.getFileName());
 				transmission.setMimeType(job.getMimeType());
-				transmission.setDuration(Long.toString(job.getDuration()) + " ms"); 
+				transmission.setDuration(job.getDurations()); 
 				
 				emitter.send(SseEmitter.event().name("updates").data(transmission));
 			} catch (IOException e) {

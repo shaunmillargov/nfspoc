@@ -14,8 +14,8 @@ public class Job {
 	private boolean error; 
 	
 	private long starttime; 
-	private long endtime; 
-	private long duration; // current duration ms. 
+	private long endInitTime;
+	private long endGetDocTIme;  
 	private String percentageComplete = "0";
 	
 	private String fileName; 
@@ -63,17 +63,25 @@ public class Job {
 	public void setStarttime(long starttime) {
 		this.starttime = starttime;
 	}
-	public long getEndtime() {
-		return endtime;
+	public String getDurations() {
+		String resp = "";
+		if ( this.starttime > 0 ) { 
+			if ( this.endInitTime > 0 ) {
+				resp = resp + Long.toString(this.endInitTime - this.starttime); 
+			}
+			if ( this.endGetDocTIme > 0 ) {
+				resp = resp + " : " + Long.toString(this.endGetDocTIme - this.starttime) + " ms";
+			} else {
+				resp = resp + " ms";
+			}
+		}
+		return resp; 
 	}
-	public void setEndtime(long endtime) {
-		this.endtime = endtime;
+	public void setEndInitTime(long endInitTime) {
+		this.endInitTime = endInitTime;
 	}
-	public long getDuration() {
-		return duration;
-	}
-	public void setDuration(long duration) {
-		this.duration = duration - this.getStarttime();
+	public void setEndGetDocTIme(long endGetDocTIme) {
+		this.endGetDocTIme = endGetDocTIme;
 	}
 	public String getPercentageComplete() {
 		return percentageComplete;

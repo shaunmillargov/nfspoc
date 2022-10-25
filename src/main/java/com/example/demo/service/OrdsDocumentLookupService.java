@@ -139,12 +139,13 @@ public class OrdsDocumentLookupService {
 				future.get(); // wait for the thread to complete.
 				appTicket = future.get().getBody().getAppTicket();
 				job.setPercentageComplete("50");
-				job.setDuration(System.currentTimeMillis());
+				job.setEndInitTime(System.currentTimeMillis());
 				DispatchOrdsResponse(job);
 				
 				try { 
 					CompletableFuture<ResponseEntity<GetFileResponse>> future2 = this.getFilePOC(job, appTicket);
 					ResponseEntity<GetFileResponse> _resp = future2.get();
+					job.setEndGetDocTIme(System.currentTimeMillis());
 					job.setFileName(_resp.getBody().getFilename());
 					job.setMimeType(_resp.getBody().getMimeType());
 					// wait for the thread to complete.
@@ -165,7 +166,6 @@ public class OrdsDocumentLookupService {
 				e.printStackTrace();
 			}
 			
-			job.setDuration(System.currentTimeMillis()); // sets the duration (ms) to this point in the process
 			DispatchOrdsResponse(job);
 		}
 		
