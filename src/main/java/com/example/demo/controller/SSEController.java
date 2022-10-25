@@ -63,6 +63,8 @@ public class SSEController {
 				transmission.setThreadId(job.getThreadId());
 				transmission.setProgress(job.getPercentageComplete());
 				transmission.setError(job.isError());
+				transmission.setFileName(job.getFileName());
+				transmission.setMimeType(job.getMimeType());
 				transmission.setDuration(Long.toString(job.getDuration()) + " ms"); 
 				
 				emitter.send(SseEmitter.event().name("updates").data(transmission));

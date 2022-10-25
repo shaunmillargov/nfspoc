@@ -60,19 +60,19 @@ public class OrdsDocumentLookupService {
 	 * @param appTicket
 	 * @return
 	 */
-	private CompletableFuture<ResponseEntity<GetFileResponse>> getFilePOC(String docGuid, String appTicket) {
+	private CompletableFuture<ResponseEntity<GetFileResponse>> getFilePOC(Job job, String appTicket) {
 		
-		logger.info("Calling getDocPOC for documentGuid: " + docGuid);
+		logger.info("Calling getDocPOC for threadId: " + job.getThreadId());
 		
 		String getEndpoint = ordsEndpoint + "/getFilePoc?AppTicket=%s" + 
 											"&ObjectGuid=%s" + 
 											"&TicketLifeTime=%s" + 
 											"&PutId=SCVPOC";
 		
-		// The base64 document guid has to be additionally HTML escaped as it's sent as a param via the RESTful ORDS call 
+		// The base64 document guid has to be additionally HTML escaped as it's sent as a param to a RESTful ORDS operation.  
 		String htmlEscapedBase64Guid = null; 
 		try {
-			htmlEscapedBase64Guid = encodeValue(docGuid);
+			htmlEscapedBase64Guid = encodeValue(job.getDocGuid());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -94,18 +94,6 @@ public class OrdsDocumentLookupService {
 	private String encodeValue(String value) throws UnsupportedEncodingException {
 	    return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
 	}
-
-	
-//	private ResponseEntity<InitializeResponse> initialize() {
-//	
-//		HttpEntity<InitializeRequest> body = new HttpEntity<InitializeRequest>(
-//				new InitializeRequest(appId, appPwd, ticLifeTime));
-//		
-//		return restTemplate.exchange(ordsEndpoint + "/initialize",
-//					HttpMethod.POST,
-//					body,
-//					InitializeResponse.class);
-//	}
 	
 	/**
 	 * 
@@ -113,10 +101,9 @@ public class OrdsDocumentLookupService {
 	 * 
 	 * @return
 	 */
-	private CompletableFuture<ResponseEntity<InitializeResponse>> initializeNFSDocument(String documentGuid) throws InterruptedException {
-		logger.info("Heard call to getFilePOC for document guid, " + documentGuid);
+	private CompletableFuture<ResponseEntity<InitializeResponse>> initializeNFSDocument(Job job) throws InterruptedException {
 		
-		logger.info("Calling initialize for documentGuid: " + documentGuid);
+		logger.info("Calling initialize for threadId: " + job.getThreadId());
 		
 		ResponseEntity<InitializeResponse> resp = null;
 		try {
@@ -128,11 +115,11 @@ public class OrdsDocumentLookupService {
 										body,
 										InitializeResponse.class);
 			
-			logger.info("Http Response from initialize call for documentGuid was " + resp.getStatusCodeValue());
+			logger.info("Http Response from initialize call for threadId: " + job.getThreadId() + " was " + resp.getStatusCodeValue());
 			return CompletableFuture.completedFuture(resp);
 		
 		} catch (HttpStatusCodeException ex) {
-			logger.error("Initialize call for documentGuid: " + documentGuid + " resulted in an HTTPStatus code response of " + ex.getRawStatusCode());
+			logger.error("Initialize call for threadId: " + job.getThreadId() + " resulted in an HTTPStatus code response of " + ex.getRawStatusCode());
 			throw ex;
 		}
 
@@ -141,39 +128,25 @@ public class OrdsDocumentLookupService {
 	@Async
 	public void SendOrdsGetDocumentRequests(List<Job> jobs) throws URISyntaxException {
 		
-//		// Calls ORDS fetch doc for each job, async. 
-//		for(Job job: jobs) {
-//			try {
-//				job.setStarttime(System.currentTimeMillis());
-//				CompletableFuture<ResponseEntity<InitializeResponse>> future = this.setNFSDocument(job.getId());
-//				future.get(); // wait for the thread to complete.
-//				job.setPercentageComplete("50");
-//			} catch (Exception e) {	
-//				job.setError(true); // triggers error progress indicator bar.
-//				job.setPercentageComplete("100");
-//				logger.error("Error received when sending Get Document request for thread id " + job.getThreadId() + ". Error: " + e.getMessage());
-//				e.printStackTrace();
-//			}
-//			job.setDuration(System.currentTimeMillis()); // sets the duration (ms) to this point in the process
-//			DispatchOrdsResponse(job);
-//		}
-		
 		String appTicket = null; 
 		
-		// Calls initilalize first for the upcoming document request, async. 
+		// Calls initialize first for the upcoming document request, async. 
 		for(Job job: jobs) {
 			try {
 				
 				job.setStarttime(System.currentTimeMillis());
-				//TODO - change this to docGuid. 
-				CompletableFuture<ResponseEntity<InitializeResponse>> future = this.initializeNFSDocument(job.getDocGuid());
+				CompletableFuture<ResponseEntity<InitializeResponse>> future = this.initializeNFSDocument(job);
 				future.get(); // wait for the thread to complete.
 				appTicket = future.get().getBody().getAppTicket();
 				job.setPercentageComplete("50");
 				
 				try { 
-					CompletableFuture<ResponseEntity<GetFileResponse>> future2 = this.getFilePOC(job.getDocGuid(), appTicket);
-					//future2.get(); // wait for the thread to complete.
+					CompletableFuture<ResponseEntity<GetFileResponse>> future2 = this.getFilePOC(job, appTicket);
+					ResponseEntity<GetFileResponse> _resp = future2.get();
+					job.setFileName(_resp.getBody().getFilename());
+					job.setMimeType(_resp.getBody().getMimeType());
+					// wait for the thread to complete.
+					logger.info("File name returned for thread Id: " + job.getThreadId() + " was " + _resp.getBody().getFilename());
 					job.setPercentageComplete("100");
 	
 				} catch (Exception e) {	
