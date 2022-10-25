@@ -139,6 +139,8 @@ public class OrdsDocumentLookupService {
 				future.get(); // wait for the thread to complete.
 				appTicket = future.get().getBody().getAppTicket();
 				job.setPercentageComplete("50");
+				job.setDuration(System.currentTimeMillis());
+				DispatchOrdsResponse(job);
 				
 				try { 
 					CompletableFuture<ResponseEntity<GetFileResponse>> future2 = this.getFilePOC(job, appTicket);
