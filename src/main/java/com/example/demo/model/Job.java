@@ -1,28 +1,44 @@
 package com.example.demo.model;
 
 /**
- * Maintains params specific to each job (thread). 
+ * Maintains params specific to each fetch document job (thread)
  * 
  * @author 176899
  *
  */
 public class Job {
 	
-	private String id; 
+	private String docGuid; 
 	private String label;
 	private String threadId;
 	private boolean error; 
+	private String errorMessage; 
 	
 	private long starttime; 
-	private long endtime; 
-	private long duration; // current duration ms. 
+	private long endInitTime;
+	private long endGetDocTIme;  
 	private String percentageComplete = "0";
 	
-	public String getId() {
-		return id;
+	private String fileName; 
+	private String mimeType; 
+	
+	public String getFileName() {
+		return fileName;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getMimeType() {
+		return mimeType;
+	}
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+	public String getDocGuid() {
+		return docGuid;
+	}
+	public void setDocGuid(String docGuid) {
+		this.docGuid = docGuid;
 	}
 	public String getLabel() {
 		return label;
@@ -48,22 +64,36 @@ public class Job {
 	public void setStarttime(long starttime) {
 		this.starttime = starttime;
 	}
-	public long getEndtime() {
-		return endtime;
+	public String getDurations() {
+		String resp = "";
+		if ( this.starttime > 0 ) { 
+			if ( this.endInitTime > 0 ) {
+				resp = resp + Long.toString(this.endInitTime - this.starttime); 
+			}
+			if ( this.endGetDocTIme > 0 ) {
+				resp = resp + " : " + Long.toString(this.endGetDocTIme - this.starttime) + " ms";
+			} else {
+				resp = resp + " ms";
+			}
+		}
+		return resp; 
 	}
-	public void setEndtime(long endtime) {
-		this.endtime = endtime;
+	public void setEndInitTime(long endInitTime) {
+		this.endInitTime = endInitTime;
 	}
-	public long getDuration() {
-		return duration;
-	}
-	public void setDuration(long duration) {
-		this.duration = duration - this.getStarttime();
+	public void setEndGetDocTIme(long endGetDocTIme) {
+		this.endGetDocTIme = endGetDocTIme;
 	}
 	public String getPercentageComplete() {
 		return percentageComplete;
 	}
 	public void setPercentageComplete(String percentageComplete) {
 		this.percentageComplete = percentageComplete;
+	}
+	public void setErrorMessage(String msg) {
+		this.errorMessage = msg; 
+	}
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 }

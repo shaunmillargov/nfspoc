@@ -66,7 +66,7 @@ public class PageController {
 
 		documentMap = new HashMap<>();
 		for (Document document : documents.getDocuments()) {
-			documentMap.put(document.getId(), document.getName());
+			documentMap.put(document.getB64Guid(), document.getName());
 		}
 	}
 
@@ -96,9 +96,9 @@ public class PageController {
 	@RequestMapping(value = "/commenceDemo", params = "submit", method = RequestMethod.POST)
 	public String submitForm(@ModelAttribute("fbo") FormBackingObject fbo, HttpServletRequest request) throws IOException, URISyntaxException {
 
-		logger.info("Starting test. Test doc Id(s): " + fbo.getDocumentIds());
+		logger.info("Starting POC test for doc guid(s): " + fbo.getDocumentGuids());
 
-		if (null == fbo.getDocumentIds()) {
+		if (null == fbo.getDocumentGuids()) {
 			fbo.setErrors("One or more document Ids must be selected");
 			request.getSession().setAttribute("documentOptions", this.documentMap);
 			return "sseIndex";
@@ -127,12 +127,12 @@ public class PageController {
 	private FormBackingObject createJobs(FormBackingObject fbo) throws IOException {
 		List<Job> jobs = new ArrayList<Job>();
 
-		List<String> documentsList = Arrays.asList(fbo.getDocumentIds().split(",", -1));
-		for (String d : documentsList) {
+		List<String> documentsList = Arrays.asList(fbo.getDocumentGuids().split(",", -1));
+		for (String guid : documentsList) {
 			Job aJob = new Job();
-			aJob.setId(d);
+			aJob.setDocGuid(guid);
 			aJob.setThreadId(getThreadId());
-			aJob.setLabel(getThreadLabel(d));
+			aJob.setLabel(getThreadLabel(guid));
 			jobs.add(aJob);
 		}
 
@@ -151,7 +151,7 @@ public class PageController {
 	private String getThreadLabel(String d) throws IOException {
 		Documents documents = loadDocsFromJSON();
 		for (Document document : documents.getDocuments()) {
-			if (document.getId().equals(d)) {
+			if (document.getB64Guid().equals(d)) {
 				return document.getName();
 			}
 		}
@@ -185,7 +185,7 @@ public class PageController {
 		System.out.println("Reseting form");
 
 		fbo.setTesting(false);
-		fbo.setDocumentIds(null);
+		fbo.setDocumentGuids(null);
 
 		request.getSession().setAttribute("documentOptions", this.documentMap);
 		request.getSession().setAttribute("fbo", fbo);

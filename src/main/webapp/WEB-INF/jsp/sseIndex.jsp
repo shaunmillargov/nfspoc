@@ -64,7 +64,7 @@
 	</c:if>
 	<label for="documentIds">Choose one or more documents (use shift to select more than one)</label>
 		<form:form action="/demo/commenceDemo" method="post" modelAttribute="fbo">
-         	<form:select path="documentIds" class="form-select" size="5" multiple="true" items="${documentOptions}" disabled="${fbo.testing == true ? 'true' : 'false'}" /><br/></br/>
+         	<form:select path="documentGuids" class="form-select" size="5" multiple="true" items="${documentOptions}" disabled="${fbo.testing == true ? 'true' : 'false'}" /><br/></br/>
          		<c:if test="${fbo.testing == false}"> 
          			<button type="submit" name="submit" class="btn btn-primary">Submit</button>
          		</c:if>
