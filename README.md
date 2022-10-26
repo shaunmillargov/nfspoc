@@ -1,8 +1,17 @@
 # nfspoc
-A POC for NFS large file retrieval 
+A POC for NFS large file retrieval.  
   
 ## Entry point
 http://localhost:8090/demo/start
 
 ## Enviro Variables
-PUT_DOC_ORDS_ENDPOINT - PUT Doc ORDS endpoint 
+| Name  | Example Value |
+| ------------- | ------------- |
+| POC_ORDS_ENDPOINT  | http://myendpoint  |
+| POC_ORDS_APP_ID  | 12345  |
+| POC_ORDS_APP_PWD | 12345  |
+| POC_ORDS_ENDPOINT  | Content Cell  |
+| POC_ORDS_TICKET_LIFETIME  | 120  |
+
+## Installation
+ 

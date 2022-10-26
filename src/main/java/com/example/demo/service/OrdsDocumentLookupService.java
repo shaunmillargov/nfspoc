@@ -140,7 +140,7 @@ public class OrdsDocumentLookupService {
 				appTicket = future.get().getBody().getAppTicket();
 				job.setPercentageComplete("50");
 				job.setEndInitTime(System.currentTimeMillis());
-				DispatchOrdsResponse(job);
+				DispatchOrdsResponse(job); // dispatch first half of request (init). 
 				
 				try { 
 					CompletableFuture<ResponseEntity<GetFileResponse>> future2 = this.getFilePOC(job, appTicket);
@@ -148,25 +148,30 @@ public class OrdsDocumentLookupService {
 					job.setEndGetDocTIme(System.currentTimeMillis());
 					job.setFileName(_resp.getBody().getFilename());
 					job.setMimeType(_resp.getBody().getMimeType());
-					// wait for the thread to complete.
 					logger.info("File name returned for thread Id: " + job.getThreadId() + " was " + _resp.getBody().getFilename());
 					job.setPercentageComplete("100");
 	
 				} catch (Exception e) {	
+					job.setEndGetDocTIme(System.currentTimeMillis());
 					job.setError(true); // triggers error progress indicator bar.
 					job.setPercentageComplete("100");
-					logger.error("Error received when sending get document request for thread id " + job.getThreadId() + ". Error: " + e.getMessage());
+					String msg = "Error received when sending get document request for thread id " + job.getThreadId() + ". Error: " + e.getMessage();
+					job.setErrorMessage(msg);
+					logger.error(msg);
 					e.printStackTrace();
 				}
 				
 			} catch (Exception e) {	
+				job.setEndInitTime(System.currentTimeMillis());
 				job.setError(true); // triggers error progress indicator bar.
 				job.setPercentageComplete("100");
-				logger.error("Error received when sending initial for thread id " + job.getThreadId() + ". Error: " + e.getMessage());
+				String msg = "Error received when sending initialize for thread id " + job.getThreadId() + ". Error: " + e.getMessage();
+				job.setErrorMessage(msg);
+				logger.error(msg);
 				e.printStackTrace();
 			}
 			
-			DispatchOrdsResponse(job);
+			DispatchOrdsResponse(job); // dispatch second half of request (getPOCFile).
 		}
 		
 	}

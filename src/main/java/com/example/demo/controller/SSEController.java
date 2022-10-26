@@ -63,9 +63,10 @@ public class SSEController {
 				transmission.setThreadId(job.getThreadId());
 				transmission.setProgress(job.getPercentageComplete());
 				transmission.setError(job.isError());
+				transmission.setErrorMessage(job.getErrorMessage());
 				transmission.setFileName(job.getFileName());
 				transmission.setMimeType(job.getMimeType());
-				transmission.setDuration(job.getDurations()); 
+				transmission.setDuration(job.getDurations());
 				
 				emitter.send(SseEmitter.event().name("updates").data(transmission));
 			} catch (IOException e) {

@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 /**
- * Maintains params specific to each job (thread). 
+ * Maintains params specific to each fetch document job (thread)
  * 
  * @author 176899
  *
@@ -12,6 +12,7 @@ public class Job {
 	private String label;
 	private String threadId;
 	private boolean error; 
+	private String errorMessage; 
 	
 	private long starttime; 
 	private long endInitTime;
@@ -89,5 +90,10 @@ public class Job {
 	public void setPercentageComplete(String percentageComplete) {
 		this.percentageComplete = percentageComplete;
 	}
-	
+	public void setErrorMessage(String msg) {
+		this.errorMessage = msg; 
+	}
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 }
