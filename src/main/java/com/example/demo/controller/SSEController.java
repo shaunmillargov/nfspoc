@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,9 @@ import com.example.demo.model.Transmission;
  */
 @RestController
 public class SSEController {
+	
+	@Value("${poc.app.httpwrapper.basepath:unknown}")
+	private String wrapperBasePath;  
 
 	public List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
@@ -64,7 +68,13 @@ public class SSEController {
 				transmission.setProgress(job.getPercentageComplete());
 				transmission.setError(job.isError());
 				transmission.setErrorMessage(job.getErrorMessage());
-				transmission.setFileName(job.getFileName());
+				
+				if ( null != job.getFileName())
+					transmission.setFileUrl(wrapperBasePath + removeExt(job.getFileName()));
+// TODO - Remove me				
+//				if ( null != job.getFileName())
+//					transmission.setFileUrl(wrapperBasePath + "CourtForm_test");
+				
 				transmission.setMimeType(job.getMimeType());
 				transmission.setDuration(job.getDurations());
 				
@@ -75,5 +85,18 @@ public class SSEController {
 				emitters.remove(emitter);
 			}
 		}
+	}
+
+	/**
+	 * Utility function to remove file ext. 
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	private String removeExt(String fileName) {
+		if ( null != fileName)
+			return fileName.replaceFirst("[.][^.]+$", "");
+		else 
+			return null; 
 	}
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "threadId", "progress", "error", "duration", "fileName", "mimeType", "duration", "errorMessage" })
+@JsonPropertyOrder({ "threadId", "progress", "error", "duration", "fileUrl", "mimeType", "duration", "errorMessage" })
 public class Transmission {
 
 	@JsonProperty("threadId")
@@ -20,8 +20,8 @@ public class Transmission {
 	@JsonProperty("duration")
 	private String duration;
 	
-	@JsonProperty("fileName")
-	private String fileName; 
+	@JsonProperty("fileUrl")
+	private String fileUrl; 
 	
 	@JsonProperty("mimeType")
 	private String mimeType; 
@@ -29,14 +29,14 @@ public class Transmission {
 	@JsonProperty("errorMessage")
 	private String errorMessage; 
 
-	@JsonProperty("fileName")
-	public String getFileName() {
-		return fileName;
+	@JsonProperty("fileUrl")
+	public String getFileUrl() {
+		return fileUrl;
 	}
 
-	@JsonProperty("fileName")
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	@JsonProperty("fileUrl")
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
 	}
 
 	@JsonProperty("mimeType")
