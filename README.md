@@ -10,8 +10,9 @@ http://localhost:8090/demo/start
 | POC_ORDS_ENDPOINT  | http://myendpoint  |
 | POC_ORDS_APP_ID  | 12345  |
 | POC_ORDS_APP_PWD | 12345  |
-| POC_ORDS_ENDPOINT  | Content Cell  |
 | POC_ORDS_TICKET_LIFETIME  | 120  |
 
 ## Installation
+TODO
+
  
