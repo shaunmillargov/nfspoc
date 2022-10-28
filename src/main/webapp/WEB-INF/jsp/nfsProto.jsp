@@ -67,6 +67,7 @@
 		window.onbeforeunload = function() {
 			eventSource.close();
 		}
+		
 	</script>
 		
 	<body>
