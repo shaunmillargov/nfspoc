@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 /**
- * Maintains params specific to each fetch document job (thread)
+ * Maintains attributes specific to each document retrieval job (thread)
  * 
  * @author 176899
  *

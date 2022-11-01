@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "AppTicket" })
-@Generated("jsonschema2pojo")
 public class InitializeResponse {
 
 	@JsonProperty("AppTicket")

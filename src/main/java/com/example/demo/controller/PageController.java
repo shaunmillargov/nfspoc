@@ -32,7 +32,7 @@ import com.example.demo.service.OrdsDocumentLookupService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Page controller.
+ * PoC Page controller.
  * 
  * @author 176899
  *
