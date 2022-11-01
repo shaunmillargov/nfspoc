@@ -14,6 +14,9 @@ http://localhost:8090/demo/start
 | POC_WRAPPER_BASEPATH | http://myendpoint |
 
 ## Installation
-TODO
+Once repo is cloned
+```
+mvn clean
+```
 
  
