@@ -32,7 +32,7 @@ import com.example.demo.service.OrdsDocumentLookupService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Page controller.
+ * PoC Page controller.
  * 
  * @author 176899
  *
@@ -56,7 +56,7 @@ public class PageController {
 		model.addAttribute("documentOptions", this.documentMap);
 		model.addAttribute("fbo", fbo);
 
-		return "sseIndex";
+		return "nfsProto";
 	}
 
 	@PostConstruct
@@ -101,7 +101,7 @@ public class PageController {
 		if (null == fbo.getDocumentGuids()) {
 			fbo.setErrors("One or more document Ids must be selected");
 			request.getSession().setAttribute("documentOptions", this.documentMap);
-			return "sseIndex";
+			return "nfsProto";
 		}
 
 		// create the jobs objects within the FBO and add to the session
@@ -113,7 +113,7 @@ public class PageController {
 		
 		ordsDocumentLookupService.SendOrdsGetDocumentRequests(fbo.getJobs());
 		
-		return "sseIndex";
+		return "nfsProto";
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class PageController {
 		request.getSession().setAttribute("documentOptions", this.documentMap);
 		request.getSession().setAttribute("fbo", fbo);
 
-		return "sseIndex";
+		return "nfsProto";
 	}
 
 }

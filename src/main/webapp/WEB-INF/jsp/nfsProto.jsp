@@ -17,6 +17,16 @@
   		margin-left:0px;
   		margin-right:20px;
 	}
+	.wrapper {
+    	overflow: hidden;
+	}
+	.progress {
+    	float:left; 
+	}
+	.linkdiv {
+    	overflow: hidden; 
+    	visibility: hidden;
+	}
 	</style>
 	<script>
 		$(document).ready(function() {
@@ -35,6 +45,14 @@
 				
 				$("#bar" + transmission.threadId).css("width", transmission.progress+"%");
 				$("#bar" + transmission.threadId).text(transmission.duration);
+				
+				if (transmission.fileUrl) {
+					$("#dldiv" + transmission.threadId).css("visibility", "visible");
+					$("#dllink" + transmission.threadId).attr("href", transmission.fileUrl);
+					// Next line triggers download (note this is using native JS as JQ method isn't reliable). 
+					// Line may also be removed to allow user to download file manually.  
+					document.getElementById('dllink' + transmission.threadId).click();
+				}
 			})
 			
 			eventSource.addEventListener('error', function(event) {
@@ -45,13 +63,13 @@
 				} else {
 					eventSource.close();
 				}
-			})
-			
+			})			
 			
 		})
 		window.onbeforeunload = function() {
 			eventSource.close();
 		}
+		
 	</script>
 		
 	<body>
@@ -81,9 +99,12 @@
 	
 	<c:forEach var="item" items="${fbo.jobs}">         
     	<p>${item.label}, threadId: ${item.threadId}</p>
-		<div class="progress" style="width: 55%">
-  			<div class="progress-bar bg-success" id="bar${item.threadId}" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
-		</div>
+    	<div class="wrapper">
+			<div class="progress" style="width: 55%">
+  				<div class="progress-bar bg-success" id="bar${item.threadId}" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
+			</div>
+			<div class="linkdiv" id="dldiv${item.threadId}">&nbsp;<a id="dllink${item.threadId}" href="Http://www.google.com">Download file</a></div>
+		</div>	
 		<br/>
     </c:forEach>
     

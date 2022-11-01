@@ -3,8 +3,8 @@ package com.example.demo.model;
 import java.util.ArrayList;
 import java.util.List;
 
-//Form backing object. 
-//Contains chosen docs list and individual thread data. 
+//Spring Form backing object. 
+//Contains chosen docs list and jobs(threads) 
 public class FormBackingObject {
 	
 	private String documentGuids; // chosen documentGuid list. 

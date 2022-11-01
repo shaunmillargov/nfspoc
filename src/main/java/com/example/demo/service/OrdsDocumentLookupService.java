@@ -69,7 +69,7 @@ public class OrdsDocumentLookupService {
 											"&TicketLifeTime=%s" + 
 											"&PutId=SCVPOC";
 		
-		// The base64 document guid has to be additionally HTML escaped as it's sent as a param to a RESTful ORDS operation.  
+		// The base64 document guid has to be additionally URL escaped as it's sent as a param to a RESTful ORDS operation.  
 		String htmlEscapedBase64Guid = null; 
 		try {
 			htmlEscapedBase64Guid = encodeValue(job.getDocGuid());
@@ -178,7 +178,7 @@ public class OrdsDocumentLookupService {
 	
 	/**
 	 * 
-	 * Dispatch Good response to front page from call to request NFS document. (Green progress bar) 
+	 * Dispatch data to front end.
 	 * 
 	 * @param threadId
 	 * @throws URISyntaxException
