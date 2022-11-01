@@ -1,5 +1,10 @@
 package com.example.demo.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.example.demo.service.OrdsDocumentLookupService;
+
 /**
  * Maintains attributes specific to each document retrieval job (thread)
  * 
@@ -16,11 +21,13 @@ public class Job {
 	
 	private long starttime; 
 	private long endInitTime;
-	private long endGetDocTIme;  
+	private long endGetDocTime;  
 	private String percentageComplete = "0";
 	
 	private String fileName; 
 	private String mimeType; 
+	
+	private static final Logger logger = LoggerFactory.getLogger(Job.class);
 	
 	public String getFileName() {
 		return fileName;
@@ -66,12 +73,13 @@ public class Job {
 	}
 	public String getDurations() {
 		String resp = "";
+		
 		if ( this.starttime > 0 ) { 
 			if ( this.endInitTime > 0 ) {
 				resp = resp + Long.toString(this.endInitTime - this.starttime); 
 			}
-			if ( this.endGetDocTIme > 0 ) {
-				resp = resp + " : " + Long.toString(this.endGetDocTIme - this.starttime) + " ms";
+			if ( this.endGetDocTime > 0 ) {
+				resp = resp + " : " + Long.toString(this.endGetDocTime - this.starttime) + " ms";
 			} else {
 				resp = resp + " ms";
 			}
@@ -81,8 +89,8 @@ public class Job {
 	public void setEndInitTime(long endInitTime) {
 		this.endInitTime = endInitTime;
 	}
-	public void setEndGetDocTIme(long endGetDocTIme) {
-		this.endGetDocTIme = endGetDocTIme;
+	public void setEndGetDocTime(long endGetDocTime) {
+		this.endGetDocTime = endGetDocTime;
 	}
 	public String getPercentageComplete() {
 		return percentageComplete;
