@@ -69,11 +69,11 @@ public class SSEController {
 				transmission.setError(job.isError());
 				transmission.setErrorMessage(job.getErrorMessage());
 				
-				if ( null != job.getFileName())
-					transmission.setFileUrl(wrapperBasePath + removeExt(job.getFileName()));
-// TODO - Remove me				
 //				if ( null != job.getFileName())
-//					transmission.setFileUrl(wrapperBasePath + "CourtForm_test");
+//					transmission.setFileUrl(wrapperBasePath + removeExt(job.getFileName()));
+// TODO - Remove me				
+				if ( null != job.getFileName())
+					transmission.setFileUrl(wrapperBasePath + "CourtForm_test");
 				
 				transmission.setMimeType(job.getMimeType());
 				transmission.setDuration(job.getDurations());

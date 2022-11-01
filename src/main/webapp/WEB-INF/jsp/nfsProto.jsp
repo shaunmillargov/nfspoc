@@ -49,6 +49,9 @@
 				if (transmission.fileUrl) {
 					$("#dldiv" + transmission.threadId).css("visibility", "visible");
 					$("#dllink" + transmission.threadId).attr("href", transmission.fileUrl);
+					// Next line triggers download (note this is using native JS as JQ method isn't reliable). 
+					// Line may also be removed to allow user to download file manually.  
+					document.getElementById('dllink' + transmission.threadId).click();
 				}
 			})
 			
@@ -60,8 +63,7 @@
 				} else {
 					eventSource.close();
 				}
-			})
-			
+			})			
 			
 		})
 		window.onbeforeunload = function() {
