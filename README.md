@@ -14,9 +14,12 @@ http://localhost:8090/demo/start
 | POC_WRAPPER_BASEPATH | http://myendpoint |
 
 ## Installation
-Once repo is cloned
+Once repo is cloned and environmental variables set:
 ```
 mvn clean
-```
+mvn install
+mvn spring-boot:run
+```  
+
 
  
