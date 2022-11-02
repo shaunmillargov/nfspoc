@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.controller.SSEController;
@@ -62,26 +64,37 @@ public class OrdsDocumentLookupService {
 	 */
 	private CompletableFuture<ResponseEntity<GetFileResponse>> getFilePOC(Job job, String appTicket) {
 		
-		logger.info("Calling getDocPOC for threadId: " + job.getThreadId());
+		ResponseEntity<GetFileResponse> results = null; 
 		
-		String getEndpoint = ordsEndpoint + "/getFilePoc?AppTicket=%s" + 
-											"&ObjectGuid=%s" + 
-											"&TicketLifeTime=%s" + 
-											"&PutId=SCVPOC";
-		
-		// The base64 document guid has to be additionally URL escaped as it's sent as a param to a RESTful ORDS operation.  
-		String htmlEscapedBase64Guid = null; 
 		try {
-			htmlEscapedBase64Guid = encodeValue(job.getDocGuid());
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		
-		getEndpoint = String.format(getEndpoint, appTicket, htmlEscapedBase64Guid, this.ticLifeTime);
-		
-		ResponseEntity<GetFileResponse> results = restTemplate.exchange(getEndpoint, HttpMethod.GET, null, GetFileResponse.class);		
+			String getEndpoint = ordsEndpoint + "/getFilePoc?AppTicket=%s" + 
+												"&ObjectGuid=%s" + 
+												"&TicketLifeTime=%s" + 
+												"&PutId=SCVPOC";
+			
+			// The base64 document guid has to be additionally URL escaped as it's sent as a param to a RESTful ORDS operation.  
+			String htmlEscapedBase64Guid = null; 
+			try {
+				htmlEscapedBase64Guid = encodeValue(job.getDocGuid());
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			
+			getEndpoint = String.format(getEndpoint, appTicket, htmlEscapedBase64Guid, this.ticLifeTime);
+			
+			logger.info("Calling ORDS getDocPOC...");
+			
+			results = restTemplate.exchange(getEndpoint, HttpMethod.GET, null, GetFileResponse.class);		
 	    
-		return CompletableFuture.completedFuture(results);
+			logger.info("Success.");
+			
+			return CompletableFuture.completedFuture(results);
+
+		} catch (Exception ex) {
+			logger.error("GetDocPOC call resulted in an error. Message: " + ex.getMessage());
+			throw ex;
+		} 
 	}
 	
 	/**
@@ -103,25 +116,26 @@ public class OrdsDocumentLookupService {
 	 */
 	private CompletableFuture<ResponseEntity<InitializeResponse>> initializeNFSDocument(Job job) throws InterruptedException {
 		
-		logger.info("Calling initialize for threadId: " + job.getThreadId());
-		
 		ResponseEntity<InitializeResponse> resp = null;
 		try {
 			
 			HttpEntity<InitializeRequest> body = new HttpEntity<InitializeRequest>(new InitializeRequest(appId, appPwd, ticLifeTime));
+			
+			logger.info("Calling ORDS initialize...");
 			
 			resp = restTemplate.exchange(ordsEndpoint + "/initialize",
 										HttpMethod.POST,
 										body,
 										InitializeResponse.class);
 			
-			logger.info("Http Response from initialize call for threadId: " + job.getThreadId() + " was " + resp.getStatusCodeValue());
+			logger.info("Success.");
+			
 			return CompletableFuture.completedFuture(resp);
 		
 		} catch (HttpStatusCodeException ex) {
-			logger.error("Initialize call for threadId: " + job.getThreadId() + " resulted in an HTTPStatus code response of " + ex.getRawStatusCode());
+			logger.error("Initialize call resulted in an HTTPStatus code response of " + ex.getRawStatusCode());
 			throw ex;
-		}
+		} 
 
 	}
 
@@ -134,6 +148,8 @@ public class OrdsDocumentLookupService {
 		for(Job job: jobs) {
 			try {
 				
+				MDC.put("threadId", job.getThreadId());
+				
 				job.setStarttime(System.currentTimeMillis());
 				CompletableFuture<ResponseEntity<InitializeResponse>> future = this.initializeNFSDocument(job);
 				future.get(); // wait for the thread to complete.
@@ -145,17 +161,17 @@ public class OrdsDocumentLookupService {
 				try { 
 					CompletableFuture<ResponseEntity<GetFileResponse>> future2 = this.getFilePOC(job, appTicket);
 					ResponseEntity<GetFileResponse> _resp = future2.get();
-					job.setEndGetDocTIme(System.currentTimeMillis());
+					job.setEndGetDocTime(System.currentTimeMillis());
 					job.setFileName(_resp.getBody().getFilename());
 					job.setMimeType(_resp.getBody().getMimeType());
-					logger.info("File name returned for thread Id: " + job.getThreadId() + " was " + _resp.getBody().getFilename());
+					logger.info("File name returned was " + _resp.getBody().getFilename());
 					job.setPercentageComplete("100");
 	
 				} catch (Exception e) {	
-					job.setEndGetDocTIme(System.currentTimeMillis());
+					job.setEndGetDocTime(System.currentTimeMillis());
 					job.setError(true); // triggers error progress indicator bar.
 					job.setPercentageComplete("100");
-					String msg = "Error received when sending get document request for thread id " + job.getThreadId() + ". Error: " + e.getMessage();
+					String msg = "Error received when sending get document request. Error: " + e.getMessage();
 					job.setErrorMessage(msg);
 					logger.error(msg);
 					e.printStackTrace();
@@ -165,10 +181,12 @@ public class OrdsDocumentLookupService {
 				job.setEndInitTime(System.currentTimeMillis());
 				job.setError(true); // triggers error progress indicator bar.
 				job.setPercentageComplete("100");
-				String msg = "Error received when sending initialize for thread id " + job.getThreadId() + ". Error: " + e.getMessage();
+				String msg = "Error received when sending initialize. Error: " + e.getMessage();
 				job.setErrorMessage(msg);
 				logger.error(msg);
 				e.printStackTrace();
+			} finally {
+				MDC.clear();
 			}
 			
 			DispatchOrdsResponse(job); // dispatch second half of request (getPOCFile).
