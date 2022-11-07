@@ -2,7 +2,7 @@
 A POC for NFS large file retrieval.  
   
 ## Entry point
-http://localhost:8090/demo/start
+http://localhost:8080/jbapp/start
 
 ## Enviro Variables
 | Name  | Example Value |
