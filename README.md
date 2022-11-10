@@ -17,12 +17,13 @@ The following environmental variable must be present when the application is run
 | POC_WRAPPER_BASEPATH | http://myendpoint |
 | POC_APP_BASEPATH | http://mybasepath |
 
+When running the application locally use the following to set the variables:
 ```
-export POC_ORDS_ENDPOINT=
-export POC_ORDS_APP_ID=
-export POC_ORDS_APP_PWD=
-export POC_ORDS_TICKET_LIFETIME=
-export POC_WRAPPER_BASEPATH=
+export POC_ORDS_ENDPOINT=""
+export POC_ORDS_APP_ID=""
+export POC_ORDS_APP_PWD=""
+export POC_ORDS_TICKET_LIFETIME=""
+export POC_WRAPPER_BASEPATH=""
 ```
 
 ## Installation
@@ -47,5 +48,19 @@ It's expected the Chrome browser will be used for this application.
  5. Once the file is available on the NFS drive (when the progress bar
     hits 100%), the file will automatically begin to download. 
 
+## Docker
+The application can also be run in docker using the `./manage` script.
 
- 
+```
+# build the image using docker and s2i
+./manage build
+
+# run the app with docker
+POC_ORDS_APP_PWD="" POC_WRAPPER_BASEPATH="" POC_ORDS_TICKET_LIFETIME=120 POC_ORDS_APP_ID="" POC_ORDS_ENDPOINT="" ./manage start
+
+# inspect the container
+./manage shell
+
+# stop the container
+./manage stop
+```
