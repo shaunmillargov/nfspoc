@@ -9,6 +9,7 @@
 		<version>2.7.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+	<packaging>war</packaging>
 	<groupId>com.example</groupId>
 	<artifactId>nfspoc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -21,6 +22,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -41,6 +48,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

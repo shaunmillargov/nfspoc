@@ -6,13 +6,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
 @EnableAsync
-public class NFS_Proto {
+public class NFS_Proto extends SpringBootServletInitializer {
+
+	@Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(NFS_Proto.class);
+    }
 	
 	 private static final Logger logger = LoggerFactory.getLogger(NFS_Proto.class);
 

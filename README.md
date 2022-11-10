@@ -2,7 +2,7 @@
 A POC for NFS large file retrieval.  
   
 ## Entry point
-http://localhost:8090/demo/start
+http://localhost:8080/demo/start
 
 ## Enviro Variables
 The following environmental variable must be present when the application is run.
@@ -16,6 +16,14 @@ The following environmental variable must be present when the application is run
 | POC_ORDS_TICKET_LIFETIME  | 120  |
 | POC_WRAPPER_BASEPATH | http://myendpoint |
 | POC_APP_BASEPATH | http://mybasepath |
+
+```
+export POC_ORDS_ENDPOINT=
+export POC_ORDS_APP_ID=
+export POC_ORDS_APP_PWD=
+export POC_ORDS_TICKET_LIFETIME=
+export POC_WRAPPER_BASEPATH=
+```
 
 ## Installation
 Once repo is cloned and environmental variables set, then run the following:
