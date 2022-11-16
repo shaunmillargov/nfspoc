@@ -3,10 +3,15 @@
 <html>
 	<head>
 		<title>NFS POC</title>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
-	</head>
+		
+		<!-- Bootstrap -->
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+		<script src="/js/bootstrap.min.js"></script>	
+		
+		<!-- jquery -->
+		<script src="/js/jquery.min.js"></script>	
+
+</head>
 	<style>
 	body {
 		border: 10px solid white;
