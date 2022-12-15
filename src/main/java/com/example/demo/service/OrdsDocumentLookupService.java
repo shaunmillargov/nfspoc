@@ -3,30 +3,33 @@ package com.example.demo.service;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.controller.SSEController;
 import com.example.demo.model.GetFileResponse;
 import com.example.demo.model.InitializeRequest;
 import com.example.demo.model.InitializeResponse;
 import com.example.demo.model.Job;
+
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class OrdsDocumentLookupService {
@@ -41,6 +44,12 @@ public class OrdsDocumentLookupService {
 	@Value("${poc.ords.endpoint:unknown}")
 	private String ordsEndpoint; 
 	
+	@Value("${poc.ords.password:setme}")
+	private String ordsPassword; 
+	
+	@Value("${poc.ords.username:setme}")
+	private String ordsUserName; 
+	
 	@Value("${poc.app.id:id}")
 	private String appId;
 	
@@ -51,7 +60,8 @@ public class OrdsDocumentLookupService {
 	private String ticLifeTime;
 
 	public OrdsDocumentLookupService(RestTemplateBuilder restTemplateBuilder) {
-		this.restTemplate = restTemplateBuilder.build();
+		this.restTemplate = restTemplateBuilder
+				.build();
 	}
 	
 	/**
@@ -85,7 +95,8 @@ public class OrdsDocumentLookupService {
 			
 			logger.info("Calling ORDS getDocPOC...");
 			
-			results = restTemplate.exchange(getEndpoint, HttpMethod.GET, null, GetFileResponse.class);		
+			results = restTemplate.exchange(getEndpoint, HttpMethod.GET, 
+						new HttpEntity<GetFileResponse>(createHeaders()), GetFileResponse.class);				
 	    
 			logger.info("Success.");
 			
@@ -119,7 +130,8 @@ public class OrdsDocumentLookupService {
 		ResponseEntity<InitializeResponse> resp = null;
 		try {
 			
-			HttpEntity<InitializeRequest> body = new HttpEntity<InitializeRequest>(new InitializeRequest(appId, appPwd, ticLifeTime));
+			HttpEntity<InitializeRequest> body = new HttpEntity<InitializeRequest>(
+								new InitializeRequest(appId, appPwd, ticLifeTime), createHeaders());
 			
 			logger.info("Calling ORDS initialize...");
 			
@@ -204,5 +216,21 @@ public class OrdsDocumentLookupService {
 	private void DispatchOrdsResponse(Job job) throws URISyntaxException {
 		sse.sendEvent(job);
 	}
-
+	
+	/**
+	 * Generates Basic Auth Header. 
+	 * 
+	 * @return
+	 */
+	private HttpHeaders createHeaders() {
+		return new HttpHeaders() {
+			private static final long serialVersionUID = -9217317753759432107L;
+			{
+				String auth = ordsUserName + ":" + ordsPassword;
+				byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+				String authHeader = "Basic " + new String(encodedAuth);
+				set("Authorization", authHeader);
+			}
+		};
+	}
 }
