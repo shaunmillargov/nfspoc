@@ -16,6 +16,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +48,9 @@ public class PageController {
 	private OrdsDocumentLookupService ordsDocumentLookupService;
 
 	private Map<String, String> documentMap;
+	
+	@Value("${poc.app.basepath}")
+	private String basePath;
 
 	@GetMapping("/start")
 	public String startView(Model model) {
@@ -55,6 +59,7 @@ public class PageController {
 
 		model.addAttribute("documentOptions", this.documentMap);
 		model.addAttribute("fbo", fbo);
+		model.addAttribute("basePath", basePath);
 
 		return "nfsProto";
 	}
@@ -68,6 +73,8 @@ public class PageController {
 		for (Document document : documents.getDocuments()) {
 			documentMap.put(document.getB64Guid(), document.getName());
 		}
+		
+		
 	}
 
 	/**

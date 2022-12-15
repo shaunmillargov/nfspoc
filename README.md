@@ -15,6 +15,7 @@ The following environmental variable must be present when the application is run
 | POC_ORDS_APP_PWD | 12345  |
 | POC_ORDS_TICKET_LIFETIME  | 120  |
 | POC_WRAPPER_BASEPATH | http://myendpoint |
+| POC_APP_BASEPATH | http://mybasepath |
 
 ## Installation
 Once repo is cloned and environmental variables set, then run the following:
