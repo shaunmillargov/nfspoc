@@ -17,7 +17,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 public class NFS_Proto extends SpringBootServletInitializer {
 
 	@Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(NFS_Proto.class);
     }
 	
