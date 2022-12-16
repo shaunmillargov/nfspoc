@@ -36,7 +36,7 @@
 	<script>
 		$(document).ready(function() {
 		
-			//var urlEndPoint = 'http://localhost:8090/subscribe';
+			//var urlEndPoint = 'http://localhost:8080/subscribe';
 			var urlEndPoint = '<c:out value="${basePath}"/>/subscribe';
 			var eventSource = new EventSource(urlEndPoint);
 			
