@@ -20,10 +20,13 @@ The following environmental variable must be present when the application is run
 When running the application locally use the following to set the variables:
 ```
 export POC_ORDS_ENDPOINT=""
+export POC_ORDS_PASSWORD=""
+export POC_ORDS_USERNAME=""
 export POC_ORDS_APP_ID=""
 export POC_ORDS_APP_PWD=""
 export POC_ORDS_TICKET_LIFETIME=""
 export POC_WRAPPER_BASEPATH=""
+export POC_APP_BASEPATH=""
 ```
 
 ## Installation
@@ -56,7 +59,7 @@ The application can also be run in docker using the `./manage` script.
 ./manage build
 
 # run the app with docker
-POC_ORDS_APP_PWD="" POC_WRAPPER_BASEPATH="" POC_ORDS_TICKET_LIFETIME=120 POC_ORDS_APP_ID="" POC_ORDS_ENDPOINT="" ./manage start
+POC_ORDS_ENDPOINT="" POC_ORDS_PASSWORD="" POC_ORDS_USERNAME="" POC_ORDS_APP_ID="" POC_ORDS_APP_PWD="" POC_ORDS_TICKET_LIFETIME=120 POC_WRAPPER_BASEPATH="" POC_APP_BASEPATH="" ./manage start
 
 # inspect the container
 ./manage shell
