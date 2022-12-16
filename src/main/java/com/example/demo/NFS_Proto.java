@@ -18,10 +18,10 @@ public class NFS_Proto extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(NFS_Proto.class);
-    }
+		return application.sources(NFS_Proto.class);
+	}
 	
-	 private static final Logger logger = LoggerFactory.getLogger(NFS_Proto.class);
+	private static final Logger logger = LoggerFactory.getLogger(NFS_Proto.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(NFS_Proto.class, args);
